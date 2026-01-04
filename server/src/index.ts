@@ -1,12 +1,14 @@
-import 'dotenv/config'
-import express from 'express'
-  const app = express()
-  const port = process.env.PORT || 3000
+import dotenv from "dotenv";
+dotenv.config({
+    path: "./.env",  // load environment variables from .env in backend root
+});
+import connectDB from "./db/index.js";
+import { app } from "./server.js";
 
-  app.get('/', (req, res) => {
-    res.send('Hello in d!   in scr ts!')
-  })
-
-  app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
-  })
+connectDB().then(() => {
+    app.listen(process.env.PORT || 8000, () => {    
+        console.log("Server is running on ${process.env.PORT || 8000}");
+    });    
+}).catch((err) => {
+    console.error("Failed to connect to MongoDB:", err);
+});
