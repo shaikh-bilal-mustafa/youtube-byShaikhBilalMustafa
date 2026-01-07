@@ -16,13 +16,12 @@ const userSchema  = new mongoose.Schema({
     },
     fullName:{
         type:String,
-        required:true,
         trim:true,
         index:true
     },
     avatar:{
         type:String, // cloudinary url
-        required:true
+        
     },
     coverImage:{
         type:String, // cloudinary url
@@ -32,10 +31,8 @@ const userSchema  = new mongoose.Schema({
         required:[true, "Password is required"],
     },
     mobileNumber:{
-        type:String,
-        required:false,
-        unique:true,
-        match: /^\+[1-9]\d{10,14}$/
+        type: String,
+        match: [/^[6-9]\d{9}$/, "Invalid mobile number"]
     },
     resetOtp: { type: String }, // To store the HASHED OTP
     otpExpiry: { type: Date }

@@ -1,6 +1,8 @@
+import { Link } from "react-router-dom";
+
 export default function Login() {   
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="min-h-screen flex items-center justify-center bg-linear-to-r from-[#2b463c] via-[#b1d182] to-white text-[#333] shadow-sm ">
             <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
                 <h2 className="text-2xl font-bold mb-4">Login</h2>
                 <form>
@@ -14,6 +16,7 @@ export default function Login() {
                     </div>
                     <button type="submit" className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Login</button>
                 </form>
+                <p className="text-center m-1 font text-l">Don't have an account?<Link to="/signup" className="text-blue-500 text-center hover:underline bg-center pl-5">Sign Up</Link></p>
             </div>
         </div>
     );
