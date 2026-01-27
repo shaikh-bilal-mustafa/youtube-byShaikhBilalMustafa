@@ -5,7 +5,8 @@ import express, { Request, Response } from "express";
 const router = Router();
 const app = express();
 app.use(cors({
-    origin: process.env.CLIENT_URL,
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
 }));
 app.use(express.json({

@@ -12,3 +12,18 @@ connectDB().then(() => {
 }).catch((err) => {
     console.error("Failed to connect to MongoDB:", err);
 });
+
+
+
+// import app from "./app";
+// import { env, connectDB } from "./config";
+
+// const startServer = async () => {
+//   await connectDB();
+
+//   app.listen(env.PORT, () => {
+//     console.log(`🚀 Server running on port ${env.PORT}`);
+//   });
+// };
+
+// startServer();

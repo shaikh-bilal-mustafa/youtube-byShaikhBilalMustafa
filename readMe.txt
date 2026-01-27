@@ -83,3 +83,4 @@ fullstack-app/
 ├── .gitignore
 ├── README.md
 └── package.json                 # Root scripts (optional monorepo)
+ abcdefghijklmnopqrstuvwxf!@23455678900-=-=[{]}:;""'''||\\<>>?||
