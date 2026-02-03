@@ -1,24 +1,23 @@
-import mongoose from "mongoose";
+import { Schema, model, Document } from "mongoose";
 import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 
-export interface IVedio extends mongoose.Document {
+export interface IVedio extends Document {
   videoFile: string; // cloudinary url
   thumbnailUrl: string; // cloudinary url
   title: string;
+  description?: string;
   duration: number; // in seconds
   views: number;
   isPublished: boolean;
-  description: string;
-  owner : mongoose.Types.ObjectId; // reference to User model
-    // likes: number;
-    // dislikes: number;
-    // commentsCount: number;
-    // uploadedBy: mongoose.Types.ObjectId; // reference to User model
-    // tags: string[];
-    // createdAt: Date;
-    // updatedAt: Date;
+  likes: number;
+  dislikes: number;
+  commentsCount: number;
+  uploadedBy: Schema.Types.ObjectId; // reference to User model
+  // tags: string[];
+  createdAt: Date;
+  updatedAt: Date;
 }
-const vedioSchema = new mongoose.Schema({
+const vedioSchema = new Schema({
   videoFile: {
     type: String,
     required: true,
@@ -27,9 +26,13 @@ const vedioSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  title: {  
+  title: {
     type: String,
     required: true,
+  },
+  description: {
+    type: String,
+    default: "",
   },
   duration: {
     type: Number,
@@ -39,14 +42,26 @@ const vedioSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  isPublished: {  
+  isPublished: {
     type: Boolean,
     default: true,
   },
-  owner:{
-    type: mongoose.Schema.Types.ObjectId,
+  uploadedBy: {
+    type: Schema.Types.ObjectId,
     ref: "User",
-  }
+  },
+  likes: {
+    type: Number,
+    default: 0,
+  },
+  dislikes: {
+    type: Number,
+    default: 0,
+  },
+  commentsCount: {
+    type: Number,
+    default: 0,
+  },
 }, { timestamps: true });
 vedioSchema.plugin(mongooseAggregatePaginate);
-export const Vedio = mongoose.model<IVedio>("Vedio", vedioSchema);
+export const Vedio = model<IVedio>("Vedio", vedioSchema);

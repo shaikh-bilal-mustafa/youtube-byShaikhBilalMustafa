@@ -6,14 +6,21 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import jwt from "jsonwebtoken";
 import env from "../config/env.js";
 import mongoose from "mongoose";
+import { Request, Response } from "express";
+import fs from "fs";
 import { channel } from "process";
 import { pipeline } from "stream";
 // import jwt from "jsonwebToken"
 
-const registerUser = asyncHandler(async (req: any, res: any) => {
+const registerUser = asyncHandler(async (req: Request, res: Response) => {
   const { username, email, password, fullName } = req.body;
   console.log(username);
   if (!username || !email || !password || !fullName) {
+    if (req.file?.path) {
+          fs.unlink(req.file.path, (err) => {
+            if (err) console.error("Temp file cleanup failed:", err);
+          });
+        }
     throw new ApiError(400, "All fields are required");
   }
   const existedUser = await User.findOne({
@@ -41,7 +48,8 @@ const registerUser = asyncHandler(async (req: any, res: any) => {
   }
   if (!avatar) {
     // Use a default avatar for testing
-    avatar = { url: "https://via.placeholder.com/150" };
+    avatar = { url: "https://cdn.freecodecamp.org/curriculum/css-photo-gallery/3.jpg" };
+    throw new ApiError(400, "Error while uploading avatar");
   }
   let coverImage;
   if (coverImageLocalPath) {
@@ -257,7 +265,7 @@ const updateUserCoverImage = asyncHandler(async (req: any, res: any) => {
     .status(200)
     .json(new ApiResponse(200, user, "User cover image updated successfully"));
 });
-const getUserChannelProfile = asyncHandler(async (req, res) => {
+const getUserChannelProfile = asyncHandler(async (req: Request, res: Response) => {
   const { username } = req.params;
   if (!username?.trim()) {
     throw new ApiError(400, "Username is required");
@@ -317,7 +325,7 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
       new ApiResponse(200, channel[0], "Channel profile fetched successfully"),
     );
 });
-const getWatchHistory = asyncHandler(async (req: any, res: any) => {
+const getWatchHistory = asyncHandler(async (req: Request, res: Response) => {
   const user = await User.aggregate([
     {
       $match: {
