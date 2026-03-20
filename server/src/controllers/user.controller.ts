@@ -11,9 +11,15 @@ import fs from "fs";
 import { channel } from "process";
 import { pipeline } from "stream";
 // import jwt from "jsonwebToken"
+function generateRandomUsername() {
+  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+}
 
 const registerUser = asyncHandler(async (req: Request, res: Response) => {
-  const { username, email, password, fullName } = req.body;
+  let { username, email, password, fullName } = req.body;
+  if(!username){
+    username = generateRandomUsername(); 
+  }
   console.log(username);
   if (!username || !email || !password || !fullName) {
     if (req.file?.path) {
@@ -36,30 +42,32 @@ const registerUser = asyncHandler(async (req: Request, res: Response) => {
     coverImage?: Express.Multer.File[];
   };
   const avatarLocalPath = files.avatar?.[0]?.path;
-  const coverImageLocalPath = files?.coverImage?.[0]?.path;
-  // Make avatar optional for testing
-  // if (!avatarLocalPath) {
-  //   throw new ApiError(400, "Avatar file is required");
-  // }
+  const coverImageLocalPath = files.coverImage?.[0]?.path;
 
-  let avatar;
+  // If the client doesn't provide an avatar, fall back to a default placeholder.
+  // The schema requires an avatar string, so we must provide some value.
+  const DEFAULT_AVATAR_URL = "https://cdn.freecodecamp.org/curriculum/css-photo-gallery/3.jpg";
+
+  let avatarUrl = DEFAULT_AVATAR_URL;
   if (avatarLocalPath) {
-    avatar = await uploadOnCloudinary(avatarLocalPath);
+    const uploadedAvatar = await uploadOnCloudinary(avatarLocalPath);
+    if (uploadedAvatar?.url) {
+      avatarUrl = uploadedAvatar.url;
+    } else {
+      console.warn("Avatar upload failed; using fallback avatar URL");
+    }
   }
-  if (!avatar) {
-    // Use a default avatar for testing
-    avatar = { url: "https://cdn.freecodecamp.org/curriculum/css-photo-gallery/3.jpg" };
-    throw new ApiError(400, "Error while uploading avatar");
-  }
-  let coverImage;
+
+  let coverImageUrl = "";
   if (coverImageLocalPath) {
-    coverImage = await uploadOnCloudinary(coverImageLocalPath);
+    const uploadedCoverImage = await uploadOnCloudinary(coverImageLocalPath);
+    coverImageUrl = uploadedCoverImage?.url || "";
   }
 
   const user = await User.create({
     fullName,
-    avatar: avatar.url,
-    coverImage: coverImage?.url || "",
+    avatar: avatarUrl,
+    coverImage: coverImageUrl,
     email,
     password,
     username: username,

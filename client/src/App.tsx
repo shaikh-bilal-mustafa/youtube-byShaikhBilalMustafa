@@ -1,19 +1,20 @@
-import SignUp from './pages/signup'
-import Login from './pages/login'
+import SignUp from './pages/SignUp'
+import SignIn from './pages/SignIn'
 import Home from './pages/Home'
+// import Profile from './pages/Profile'
 import NotFound from './pages/NotFound'
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import './App.css'
 function App() {
+  const navigate = useNavigate();
  
-
   return (
     <>
-      <h1>Welcome to youtube</h1>
       <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<SignUp />} />
+      <Route path="/login" element={<SignIn onSwitchToSignUp={() => navigate('/signup')} onSignIn={() => navigate('/')} />} />
+      <Route path="/signup" element={<SignUp onSwitchToSignIn={() => navigate('/login')} onSignUp={() => navigate('/')} />} />
+      {/* <Route path="/profile" element={<Profile onLogout={() => navigate('/login')} />} /> */}
       <Route path="*" element={<NotFound />} />
     </Routes>
     </>

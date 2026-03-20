@@ -16,12 +16,10 @@ app.use(express.json({
 app.use(urlencoded({ extended: true , limit :'16kb'}));
 app.use(express.static("public"));
 app.use(cookieParser());
-app.use((req: Request, res: Response, next) => {
-    res.header("Access-Control-Allow-Origin", "*");// want to remove imedeitly
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-});
+// Removed problematic CORS override middleware
 
+import { ApiError } from "./utils/ApiError.js";
+import { ApiResponse } from "./utils/ApiResponse.js";
 import userRouter from "./routes/user.route.js";
 app.get("/test", (req: Request, res: Response) => {
   res.send("Server working");
@@ -30,4 +28,19 @@ app.use("/api/v1/users", userRouter);
 
 import videoRouter from "./routes/video.route.js";
 app.use("/api/v1/videos", videoRouter);
+
+// Global error handler
+app.use((err: any, req: Request, res: Response, next: any) => {
+  if (err instanceof ApiError) {
+    return res
+      .status(err.code)
+      .json(new ApiResponse(err.code, null, err.message));
+  }
+
+  const statusCode = err.statusCode || err.status || 500;
+  const message = err.message || "Internal server error";
+
+  return res.status(statusCode).json(new ApiResponse(statusCode, null, message));
+});
+
 export { app };
