@@ -60,7 +60,7 @@ export default function SignUp({ onSwitchToSignIn, onSignUp }: SignUpProps) {
     email?: string;
     password?: string;
     terms?: string;
-    bakend?: string;
+    backend?: string;
   }>({});
   // message state
   const [message, setMessage] = useState<string | null>(null);
@@ -121,7 +121,7 @@ export default function SignUp({ onSwitchToSignIn, onSignUp }: SignUpProps) {
       onSignUp(fullName, email, password);
     } catch (error: any) {
       const backendMessage = error.response?.data?.message;
-      setErrors({ bakend: backendMessage });
+      setErrors({ backend: backendMessage });
     } finally {
       setIsLoading(false);
     }

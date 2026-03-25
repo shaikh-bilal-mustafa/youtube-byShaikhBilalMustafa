@@ -56,16 +56,12 @@ export const logoutUser = () => {
 
 //  Get current logged-in user
 export const getProfile = () => {
-  return api.get("/user/profile");
+  return api.get("/users/profile");
 };
 
 //  Update profile
-export const updateUserProfile = (data: FormData) => {
-  return api.put("/user/update-profile", data, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+export const updateUserProfile = (data: { fullName: string; email: string; username: string }) => {
+  return api.put("/users/update-profile", data);
 };
 
 // Change password
@@ -73,26 +69,35 @@ export const changePassword = (data: {
   oldPassword: string;
   newPassword: string;
 }) => {
-  return api.put("/user/change-password", data);
+  return api.put("/users/update-password", data);
 };
 export const refreshToken = () => {
-  return api.get("/user/refresh-token");
+  return api.get("/users/refresh-token");
 }
 export const updateUserAvatar = (avatar: File) => {
-     const formData = new FormData();
+  const formData = new FormData();
   formData.append("avatar", avatar);
-  return api.put("/user/update-avatar", avatar)
+  return api.put("/users/update-avatar", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 };
 
 export const updateUserCoverImage = (coverImage: File) => {
   const formData = new FormData();
   formData.append("coverImage", coverImage);
+  return api.put("/users/update-cover-image", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 };
 
 export const getUserChannelProfile = (username: string) => {
-  return api.get(`/user/c/${username}`);
+  return api.get(`/users/c/${username}`);
 }
 export const getWatchHistory = () => {
-  return api.get("/user/history");
+  return api.get("/users/history");
 }
 export * from "./user.api";

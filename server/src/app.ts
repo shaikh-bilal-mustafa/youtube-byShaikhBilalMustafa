@@ -29,6 +29,14 @@ app.use("/api/v1/users", userRouter);
 import videoRouter from "./routes/video.route.js";
 app.use("/api/v1/videos", videoRouter);
 
+import commentRouter from "./routes/comment.route.js";
+app.use("/api/v1", commentRouter);
+
+import likeRouter from "./routes/like.route.js";
+app.use("/api/v1/likes", likeRouter);
+
+import subscriptionRouter from "./routes/subscription.route.js";
+app.use("/api/v1/subscriptions", subscriptionRouter);
 // Global error handler
 app.use((err: any, req: Request, res: Response, next: any) => {
   if (err instanceof ApiError) {

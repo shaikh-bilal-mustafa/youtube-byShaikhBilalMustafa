@@ -224,15 +224,24 @@ const getProfile = asyncHandler(async (req: any, res: any) => {
     .json(new ApiResponse(200, req.user, "User profile fetched successfully"));
 });
 const updateProfile = asyncHandler(async (req: any, res: any) => {
-  const { fullName, email } = req.body;
-  if (!fullName || !email) {
-    throw new ApiError(400, "Full name and email are required");
+  const { fullName, email ,username} = req.body;
+  if (!fullName || !email || !username) {
+    throw new ApiError(400, "Full name, email, and username are required");
   }
+   if (!req.user?._id) {
+    throw new ApiError(401, "Unauthorized");
+  }
+  const existingUser = await User.findOne({ username });
+
+if (existingUser && existingUser._id.toString() !== req.user._id.toString()) {
+  throw new ApiError(400, "Username already taken");
+}
   const user = await User.findByIdAndUpdate(
     req.user._id,
-    { $set: { fullName, email } },
+    { $set: { fullName, email, username } },
     { new: true },
   ).select("-password");
+  
   return res
     .status(200)
     .json(new ApiResponse(200, user, "User profile updated successfully"));

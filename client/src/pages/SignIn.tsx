@@ -56,6 +56,12 @@ export default function SignIn({ onSwitchToSignUp, onSignIn }: SignInProps) {
     try {
       const response = await loginUser({ email, password });
       console.log("User logged in successfully:", response);
+      
+      // Store the access token in localStorage from the response data
+      if (response.data?.accessToken) {
+        localStorage.setItem("accessToken", response.data.accessToken);
+      }
+      
       onSignIn(email, password);
     } catch (error: any) {
       const backendMessage = error.response?.data?.message;
