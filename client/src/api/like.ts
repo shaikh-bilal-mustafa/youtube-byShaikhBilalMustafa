@@ -1,20 +1,21 @@
-import axios from "axios";
+import api from "./axios";
 
 const toggleLike = (videoId: string) =>
-  axios.post(
-    `http://localhost:8000/api/v1/like/toggle/${videoId}`,
-    {},
-    {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-    },
-  );
+  api.post(`/like/toggle/${videoId}`);
 
-const getLikeCount = (videoId: string) =>
-  axios.get(`http://localhost:8000/api/v1/like/count/${videoId}`);
+const getLikeCount = async (videoId: string) => {
+  const res = await api.get(`/like/count/${videoId}`);
+  return res.data.data?.count ?? 0;
+};
 
-const getLikeStatus = (videoId: string) =>
-  axios.get(`http://localhost:8000/api/v1/like/status/${videoId}`);
+const getLikeStatus = async (videoId: string) => {
+  try {
+    const res = await api.get(`/like/status/${videoId}`);
+    return res.data.data?.liked ?? false;
+  } catch (error) {
+    // not logged in or status unavailable
+    return false;
+  }
+};
 
 export { toggleLike, getLikeCount, getLikeStatus };

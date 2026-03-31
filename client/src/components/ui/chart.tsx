@@ -204,10 +204,6 @@ function ChartTooltipContent({
                     <itemConfig.icon />
                   ) : (
                     !hideIndicator && (
-                    74 x 5
-                    1 Hidden Terminal
-                    cd c:\youtube\client ; npm run build
-                    )
                       <div
                         className={cn(
                           "shrink-0 rounded-xs border-(--color-border) bg-(--color-bg)",

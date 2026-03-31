@@ -2,14 +2,19 @@ import { MoreVertical } from 'lucide-react';
 import { Button } from './ui/button';
 
 export interface Video {
-  id: string;
-  thumbnail: string;
+  _id: string;
+  videoFile : string;
+  thumbnailUrl  : string;
   title: string;
-  channel: string;
-  views: string;
-  timestamp: string;
-  duration: string;
-  channelAvatar: string;
+  channel?: string;
+  user?: { username: string; fullName: string };
+  views: number;
+  timestamp?: string;
+  createdAt?: string;
+  duration: number;
+  channelAvatar?: string;
+  likeCount?: number;
+  commentCount?:number;
 }
 
 interface VideoCardProps {
@@ -23,7 +28,7 @@ export function VideoCard({ video, onClick }: VideoCardProps) {
       {/* Thumbnail */}
       <div className="relative aspect-video rounded-xl overflow-hidden bg-gray-200 mb-3">
         <img
-          src={video.thumbnail}
+          src={video.thumbnailUrl}
           alt={video.title}
           className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
         />
@@ -37,7 +42,7 @@ export function VideoCard({ video, onClick }: VideoCardProps) {
         {/* Channel avatar */}
         <div className="shrink-0">
           <div className="w-9 h-9 rounded-full bg-linear-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white text-sm font-semibold">
-            {video.channel.charAt(0)}
+            {video?.user?.username?.charAt(0) || video?.title?.charAt(0) || "?"}
           </div>
         </div>
 
@@ -47,10 +52,10 @@ export function VideoCard({ video, onClick }: VideoCardProps) {
             {video.title}
           </h3>
           <p className="text-sm text-gray-600 hover:text-gray-900 cursor-pointer">
-            {video.channel}
+            {video.user?.username || video.user?.fullName || "Unknown"}
           </p>
           <p className="text-sm text-gray-600">
-            {video.views} • {video.timestamp}
+            {video.views} views • {video.createdAt ? new Date(video.createdAt).toLocaleDateString() : "Unknown"}
           </p>
         </div>
 

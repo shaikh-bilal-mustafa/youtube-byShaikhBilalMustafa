@@ -4,14 +4,14 @@
 **Goal**: Establish database, authentication, and core API structure
 
 ### Tasks:
-- [ ] Configure MongoDB connection and environment variables
-- [ ] Create User model (email, password, avatar, profile)
-- [ ] Create Video model (title, description, thumbnail, duration, views, userId)
-- [ ] Create Comment model (text, userId, videoId, timestamp)
-- [ ] Create Like model (userId, videoId, timestamp)
-- [ ] Create Subscription model (subscriberId, channelId)
-- [ ] Setup JWT authentication utils
-- [ ] Test database connection
+- [x] Configure MongoDB connection and environment variables
+- [x] Create User model (email, password, avatar, profile)
+- [x] Create Video model (title, description, thumbnail, duration, views, userId)
+- [x] Create Comment model (text, userId, videoId, timestamp)
+- [x] Create Like model (userId, videoId, timestamp)
+- [x] Create Subscription model (subscriberId, channelId)
+- [x] Setup JWT authentication utils
+- [x] Test database connection
 
 ---
 
@@ -19,14 +19,14 @@
 **Goal**: Implement user registration, login, and profile management
 
 ### Tasks:
-- [ ] Create User controller (register, login, logout)
-- [ ] Create auth middleware (JWT verification)
-- [ ] Create auth routes (/register, /login, /logout)
-- [ ] Implement password hashing (bcrypt)
-- [ ] Add refresh token logic
-- [ ] Create update profile endpoint
-- [ ] Create get profile endpoint
-- [ ] Test auth endpoints with Postman
+- [x] Create User controller (register, login, logout)
+- [x] Create auth middleware (JWT verification)
+- [x] Create auth routes (/register, /login, /logout)
+- [x] Implement password hashing (bcrypt)
+- [x] Add refresh token logic
+- [x] Create update profile endpoint
+- [x] Create get profile endpoint
+- [x] Test auth endpoints with Postman
 
 ---
 
@@ -34,14 +34,14 @@
 **Goal**: Implement video CRUD operations and video-related features
 
 ### Tasks:
-- [ ] Create Video controller (upload, getAll, getById, update, delete)
-- [ ] Setup Cloudinary for video/thumbnail uploads
-- [ ] Create video routes with auth middleware
-- [ ] Implement video search and filter
-- [ ] Add pagination for videos
-- [ ] Create view counter logic
-- [ ] Implement trending/popular videos endpoint
-- [ ] Test video endpoints
+- [x] Create Video controller (upload, getAll, getById, update, delete)
+- [x] Setup Cloudinary for video/thumbnail uploads
+- [x] Create video routes with auth middleware
+- [x] Implement video search and filter
+- [x] Add pagination for videos
+- [x] Create view counter logic
+- [x] Implement trending/popular videos endpoint
+- [x] Test video endpoints
 
 ---
 
@@ -49,14 +49,14 @@
 **Goal**: Implement commenting and liking system
 
 ### Tasks:
-- [ ] Create Comment controller (create, getAll, delete, update)
-- [ ] Create Like controller (toggle, getCount)
-- [ ] Create comment routes with auth
-- [ ] Create like routes with auth
-- [ ] Implement comment sorting (newest first)
-- [ ] Add pagination for comments
-- [ ] Create nested replies (optional)
-- [ ] Test comment & like endpoints
+- [x] Create Comment controller (create, getAll, delete, update)
+- [x] Create Like controller (toggle, getCount)
+- [x] Create comment routes with auth
+- [x] Create like routes with auth
+- [x] Implement comment sorting (newest first)
+- [x] Add pagination for comments
+- [x] Create nested replies (optional)
+- [x] Test comment & like endpoints
 
 ---
 
@@ -64,14 +64,14 @@
 **Goal**: Add subscription system and video processing
 
 ### Tasks:
-- [ ] Create Subscription controller
-- [ ] Create subscription routes
-- [ ] Implement subscribe/unsubscribe logic
-- [ ] Setup FFmpeg for video processing
-- [ ] Create video thumbnail generation
-- [ ] Add video duration calculation
-- [ ] Implement video quality conversion (optional)
-- [ ] Test subscription endpoints
+- [x] Create Subscription controller
+- [x] Create subscription routes
+- [x] Implement subscribe/unsubscribe logic
+- [x] Setup FFmpeg for video processing
+- [x] Create video thumbnail generation
+- [x] Add video duration calculation
+- [x] Implement video quality conversion (optional)
+- [x] Test subscription endpoints
 
 ---
 
@@ -79,14 +79,14 @@
 **Goal**: Build reusable UI components
 
 ### Tasks:
-- [ ] Fix and test Header component
-- [ ] Fix and test Sidebar component
-- [ ] Fix and test Navbar component
-- [ ] Complete VideoCard component
-- [ ] Create VideoPlayer component with controls
-- [ ] Create Loader/Skeleton components
-- [ ] Create Modal/Dialog component
-- [ ] Setup global styles and tailwind
+- [x] Fix and test Header component
+- [x] Fix and test Sidebar component
+- [x] Fix and test Navbar component
+- [x] Complete VideoCard component
+- [x] Create VideoPlayer component with controls
+- [x] Create Loader/Skeleton components
+- [x] Create Modal/Dialog component
+- [x] Setup global styles and tailwind
 
 ---
 
@@ -94,14 +94,14 @@
 **Goal**: Implement user authentication UI
 
 ### Tasks:
-- [ ] Create/Fix SignUp page with form validation
-- [ ] Create/Fix SignIn page with form validation
-- [ ] Setup AuthContext and useAuth hook
-- [ ] Implement protected routes
-- [ ] Add token storage (localStorage/cookies)
-- [ ] Create logout functionality
-- [ ] Add error handling and notifications
-- [ ] Test authentication flow
+- [x] Create/Fix SignUp page with form validation
+- [x] Create/Fix SignIn page with form validation
+- [x] Setup AuthContext and useAuth hook
+- [x] Implement protected routes
+- [x] Add token storage (localStorage/cookies)
+- [x] Create logout functionality
+- [x] Add error handling and notifications
+- [x] Test authentication flow
 
 ---
 
@@ -109,14 +109,14 @@
 **Goal**: Complete the home page with video listing
 
 ### Tasks:
-- [ ] Fix and implement video listing
-- [ ] Integrate with backend getVideos API
-- [ ] Implement filter chips functionality
-- [ ] Add search functionality
-- [ ] Implement pagination/infinite scroll
-- [ ] Add loading states
-- [ ] Add error handling
-- [ ] Implement video card interactions
+- [x] Fix and implement video listing
+- [x] Integrate with backend getVideos API
+- [x] Implement filter chips functionality
+- [x] Add search functionality
+- [x] Implement pagination/infinite scroll
+- [x] Add loading states
+- [x] Add error handling
+- [x] Implement video card interactions
 
 ---
 
@@ -124,14 +124,14 @@
 **Goal**: Create video player and related features
 
 ### Tasks:
-- [ ] Complete VideoPlayer component
-- [ ] Integrate video playback (HLS/MP4)
-- [ ] Add play/pause/fullscreen controls
-- [ ] Display video details and metadata
-- [ ] Implement like button
-- [ ] Implement subscribe button
-- [ ] Create comments section UI
-- [ ] Test video playback
+- [x] Complete VideoPlayer component
+- [x] Integrate video playback (HLS/MP4)
+- [x] Add play/pause/fullscreen controls
+- [x] Display video details and metadata
+- [x] Implement like button
+- [x] Implement subscribe button
+- [x] Create comments section UI
+- [x] Test video playback
 
 ---
 
@@ -139,14 +139,14 @@
 **Goal**: Implement user profile and channel management
 
 ### Tasks:
-- [ ] Create Profile page layout
-- [ ] Display user info and avatar
-- [ ] Show user's uploaded videos
-- [ ] Implement edit profile functionality
-- [ ] Add upload video feature
-- [ ] Display subscriber count
-- [ ] Show video statistics (views, likes)
-- [ ] Add profile customization options
+- [x] Create Profile page layout
+- [x] Display user info and avatar
+- [x] Show user's uploaded videos
+- [x] Implement edit profile functionality
+- [x] Add upload video feature
+- [x] Display subscriber count
+- [x] Show video statistics (views, likes)
+- [x] Add profile customization options
 
 ---
 
@@ -154,13 +154,13 @@
 **Goal**: Implement comment system and interactive features
 
 ### Tasks:
-- [ ] Create comment list component
-- [ ] Implement add comment functionality
-- [ ] Implement delete comment (own only)
-- [ ] Add like/unlike video
-- [ ] Implement subscribe/unsubscribe
+- [x] Create comment list component
+- [x] Implement add comment functionality
+- [x] Implement delete comment (own only)
+- [x] Add like/unlike video
+- [x] Implement subscribe/unsubscribe
 - [ ] Add reply to comments (optional)
-- [ ] Implement comment sorting
+- [x] Implement comment sorting
 - [ ] Add comment pagination
 
 ---
@@ -169,8 +169,8 @@
 **Goal**: Create subscriptions/feed page
 
 ### Tasks:
-- [ ] Create Subscriptions/Feed page
-- [ ] Display subscribed channels' videos
+- [x] Create Subscriptions/Feed page
+- [x] Display subscribed channels' videos
 - [ ] Implement channel list UI
 - [ ] Add filter by channel
 - [ ] Sort by date/popularity
@@ -184,12 +184,12 @@
 **Goal**: Complete API integration and error handling
 
 ### Tasks:
-- [ ] Setup axios interceptors for auth tokens
+- [x] Setup axios interceptors for auth tokens
 - [ ] Implement global error handling
 - [ ] Add success/error notifications (toast)
 - [ ] Implement retry logic for failed requests
-- [ ] Add request debouncing for search
-- [ ] Setup environment variables for API URL
+- [x] Add request debouncing for search
+- [x] Setup environment variables for API URL
 - [ ] Create error boundary component
 - [ ] Test all API calls
 
@@ -199,14 +199,14 @@
 **Goal**: Final testing, bug fixes, and optimizations
 
 ### Tasks:
-- [ ] Test all user flows end-to-end
-- [ ] Fix responsive design issues
-- [ ] Optimize images and performance
-- [ ] Implement lazy loading
-- [ ] Add accessibility features (ARIA labels)
-- [ ] Test on multiple browsers
-- [ ] Fix console errors and warnings
-- [ ] Document API endpoints
+- [x] Test all user flows end-to-end
+- [x] Fix responsive design issues
+- [x] Optimize images and performance
+- [x] Implement lazy loading
+- [x] Add accessibility features (ARIA labels)
+- [x] Test on multiple browsers
+- [x] Fix console errors and warnings
+- [x] Document API endpoints
 
 ---
 

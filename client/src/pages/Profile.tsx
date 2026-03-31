@@ -7,6 +7,10 @@ import {
   logoutUser,
   changePassword,
 } from "../api/user.api";
+import { getMyVideos } from "../api/video";
+import { getSubscriptionCount } from "../api/subscription";
+import { VideoCard } from "../components/VideoCard";
+import type { Video } from "../components/VideoCard";
 
 export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
@@ -21,6 +25,7 @@ export default function ProfilePage() {
   const DEFAULT_COVER =
     "https://images.unsplash.com/photo-1503264116251-35a269479413";
   const [user, setUser] = useState({
+    _id: "",
     fullName: "",
     username: "",
     email: "",
@@ -31,12 +36,15 @@ export default function ProfilePage() {
   const [originalUser, setOriginalUser] = useState(user);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [coverImageFile, setCoverImageFile] = useState<File | null>(null);
+  const [videos, setVideos] = useState<Video[]>([]);
+  const [subscriberCount, setSubscriberCount] = useState(0);
   useEffect(() => {
     const loadUserProfile = async () => {
       try {
         const res = await getProfile();
         const userdata = res.data.data;
         const updatedUser = {
+          _id: userdata._id || "",
           fullName: userdata.fullName ?? "",
           username: userdata.username ?? "",
           email: userdata.email ?? "",
@@ -46,12 +54,30 @@ export default function ProfilePage() {
         };
         setUser(updatedUser);
         setOriginalUser(updatedUser);
+        // Load subscriber count
+        try {
+          const count = await getSubscriptionCount(updatedUser._id);
+          setSubscriberCount(count);
+        } catch (error) {
+          console.error("Failed to load subscriber count:", error);
+        }
       } catch (error: any) {
         const backendMessage = error.response?.data?.message;
        setErrors({ backend: backendMessage || "Failed to load profile. Please try again." });
       }
     };
+    const loadUserVideos = async () => {
+      try {
+        const res = await getMyVideos();
+        setVideos(res.data.videos || []);
+        // Assuming user._id is set, but since it's async, use the loaded user
+        // For now, set after user is loaded
+      } catch (error) {
+        console.error("Failed to load videos:", error);
+      }
+    };
     loadUserProfile();
+    loadUserVideos();
   }, []);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -113,6 +139,7 @@ export default function ProfilePage() {
       const res = await getProfile();
       const userdata = res.data.data;
       const updatedUser = {
+        _id: userdata._id || "",
         fullName: userdata.fullName ?? "",
         username: userdata.username ?? "",
         email: userdata.email ?? "",
@@ -127,6 +154,7 @@ export default function ProfilePage() {
       setIsEditing(false);
     } catch (e:any) {
       console.error("Error saving profile:", e);
+       
         setErrors({ backend: e.response?.data?.message || "Failed to save profile. Please try again." });
     } finally {
       setIsLoading(false);
@@ -295,6 +323,53 @@ export default function ProfilePage() {
               Logout
             </button>
           </div>
+        </div>
+
+        {/* Stats Section */}
+        <div className="p-6 border-t">
+          <h2 className="text-xl font-semibold mb-4">Channel Statistics</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="text-center p-4 bg-gray-50 rounded-lg">
+              <p className="text-2xl font-bold text-blue-600">{videos.length}</p>
+              <p className="text-gray-600">Videos</p>
+            </div>
+            <div className="text-center p-4 bg-gray-50 rounded-lg">
+              <p className="text-2xl font-bold text-green-600">
+                {videos.reduce((sum, video) => sum + (video.views || 0), 0)}
+              </p>
+              <p className="text-gray-600">Total Views</p>
+            </div>
+            <div className="text-center p-4 bg-gray-50 rounded-lg">
+              <p className="text-2xl font-bold text-purple-600">{subscriberCount}</p>
+              <p className="text-gray-600">Subscribers</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Videos Section */}
+        <div className="p-6 border-t">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold">Your Videos</h2>
+            <button
+              onClick={() => window.location.href = "/upload"}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            >
+              Upload Video
+            </button>
+          </div>
+          {videos.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {videos.map((video) => (
+                <VideoCard
+                  key={video._id}
+                  video={video}
+                  onClick={() => {/* handle video click */}}
+                />
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-500">No videos uploaded yet.</p>
+          )}
         </div>
       </div>
     </div>

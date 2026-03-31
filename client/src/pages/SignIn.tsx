@@ -11,14 +11,17 @@ import {
   CardTitle,
 } from "../components/ui/card";
 import { Eye, EyeOff, Mail, Lock, AlertCircle } from "lucide-react";
-import { loginUser } from "../api/user.api";
+import { useAuth } from "../Hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 interface SignInProps {
   onSwitchToSignUp: () => void;
-  onSignIn: (email: string, password: string) => void;
 }
 
-export default function SignIn({ onSwitchToSignUp, onSignIn }: SignInProps) {
+export default function SignIn({ onSwitchToSignUp }: SignInProps) {
+  const { login } = useAuth();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -54,20 +57,13 @@ export default function SignIn({ onSwitchToSignUp, onSignIn }: SignInProps) {
     if (!validateForm()) return;
     setErrors({});
     try {
-      const response = await loginUser({ email, password });
-      console.log("User logged in successfully:", response);
-      
-      // Store the access token in localStorage from the response data
-      if (response.data?.accessToken) {
-        localStorage.setItem("accessToken", response.data.accessToken);
-      }
-      
-      onSignIn(email, password);
+      await login(email, password);
+      toast.success("Logged in successfully!");
+      navigate("/");
     } catch (error: any) {
-      const backendMessage = error.response?.data?.message;
-      if (backendMessage) {
-        setErrors({ backend: backendMessage });
-      }
+      const backendMessage = error.response?.data?.message || "Login failed";
+      setErrors({ backend: backendMessage });
+      toast.error(backendMessage);
     }
   };
 

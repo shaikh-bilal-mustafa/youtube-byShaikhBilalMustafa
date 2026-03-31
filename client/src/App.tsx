@@ -2,6 +2,8 @@ import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
+import UploadPage from "./pages/UploadVideo";
+import Pay  from "./pages/hadiya"
 import { Routes, Route, useNavigate } from "react-router-dom";
 import "./App.css";
 import ProfilePage from "./pages/Profile";
@@ -32,6 +34,8 @@ function App() {
           }
         />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/upload" element={<UploadPage />} />
+        <Route path="/pay" element={<Pay />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

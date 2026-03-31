@@ -27,7 +27,6 @@ export const registerUser = (data: RegisterPayload) => {
   
   if (data.avatar) {
     formData.append("avatar", data.avatar);
-    console.log("Avatar file:", data.avatar);
   }else{
     formData.append("avatar", new Blob(), "https://cdn.freecodecamp.org/curriculum/css-photo-gallery/3.jpg");
     console.log("No avatar provided, using default image.");

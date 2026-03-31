@@ -1,4 +1,5 @@
-import { Home, TrendingUp, Library, History, Clock, ThumbsUp, Film, Gamepad2, Trophy, Lightbulb, Shirt, Music } from 'lucide-react';
+import { Home, TrendingUp, Library, History, Clock, ThumbsUp, Film, Gamepad2, Trophy, Lightbulb, Shirt, Music, UserCheck } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -8,6 +9,7 @@ interface SidebarProps {
 const menuItems = [
   { icon: Home, label: 'Home', active: true },
   { icon: TrendingUp, label: 'Trending' },
+  { icon: UserCheck, label: 'Subscriptions' },
   { icon: Library, label: 'Library' },
 ];
 
@@ -27,6 +29,7 @@ const exploreItems = [
 ];
 
 export function Sidebar({ isOpen, onItemClick }: SidebarProps) {
+  const navigate = useNavigate();
   return (
     <>
       {/* Overlay for mobile */}
@@ -49,6 +52,12 @@ export function Sidebar({ isOpen, onItemClick }: SidebarProps) {
             {menuItems.map((item) => (
               <button
                 key={item.label}
+                onClick={() => {
+                  if (item.label === 'Home') navigate('/');
+                  else if (item.label === 'Subscriptions') navigate('/subscriptions');
+                  // add others
+                  onItemClick?.();
+                }}
                 className={`w-full flex items-center gap-6 px-3 py-2.5 rounded-lg hover:bg-gray-100 transition-colors ${
                   item.active ? 'bg-gray-100' : ''
                 }`}

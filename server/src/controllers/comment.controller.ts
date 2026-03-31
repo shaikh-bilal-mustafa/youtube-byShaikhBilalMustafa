@@ -49,6 +49,43 @@ const deleteComment = asyncHandler(async (req: Request, res: Response) => {
     await comment.remove();
     res.json(new ApiResponse(200, null, 'Comment deleted successfully'));
 });
+const updateComment = asyncHandler(async (req: Request, res: Response) => {
+    if(!req.user || !req.user._id) {
+        throw new ApiError(401, 'Login required');
+    }
+    const { commentId } = req.params;
+    const { content } = req.body;
+    if (!commentId || !content) {
+        throw new ApiError(400, 'Comment ID and content are required');
+    }
+    const comment = await Comment.findById(commentId);
+    if (!comment) {
+        throw new ApiError(404, 'Comment not found');
+    }
+    if (comment.owner.toString() !== req.user._id.toString()) {
+        throw new ApiError(403, 'You can only update your own comments');
+    }
+    comment.content = content;
+    await comment.save();
+    res.json(new ApiResponse(200, comment, 'Comment updated successfully'));
+});
+const getVideoCommentsPaginated = asyncHandler(async (req: Request, res: Response) => {
+    const { videoId } = req.params;
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const skip = (page - 1) * limit;
+    if (!videoId) {
+        throw new ApiError(400, 'Video ID is required');
+    }
+    const comments = await Comment.find({ video: videoId })
+        .populate('owner', 'username avatar')
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit);
+    const totalComments = await Comment.countDocuments({ video: videoId });
+    const totalPages = Math.ceil(totalComments / limit);
+    res.json(new ApiResponse(200, { comments, totalPages, currentPage: page }, 'Comments fetched successfully'));
+});
 
 
-export { addComment, getVideoComments, deleteComment };
+export { addComment, getVideoComments, deleteComment, updateComment, getVideoCommentsPaginated };

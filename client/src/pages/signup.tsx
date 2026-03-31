@@ -11,7 +11,6 @@ import {
   CardHeader,
   CardTitle,
 } from "../components/ui/card";
-import { registerUser } from "../api/user.api";
 import {
   Eye,
   EyeOff,
@@ -21,6 +20,9 @@ import {
   Loader2,
   AlertCircle,
 } from "lucide-react";
+import { useAuth } from "../Hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 // Password strength calculator
 const calculatePasswordStrength = (
@@ -42,10 +44,11 @@ const calculatePasswordStrength = (
 
 interface SignUpProps {
   onSwitchToSignIn: () => void;
-  onSignUp: (fullName: string, email: string, password: string) => void;
 }
 
-export default function SignUp({ onSwitchToSignIn, onSignUp }: SignUpProps) {
+export default function SignUp({ onSwitchToSignIn }: SignUpProps) {
+  const { register } = useAuth();
+  const navigate = useNavigate();
   // Form state
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -114,14 +117,13 @@ export default function SignUp({ onSwitchToSignIn, onSignUp }: SignUpProps) {
     setMessage(null);
     
     try {
-      // Simulate API call
-      const response = await registerUser({ fullName, email, password });
-      console.log("User registered successfully:", response);
-      setMessage("Account created successfully! Please sign in.");
-      onSignUp(fullName, email, password);
+      await register(fullName, email, password);
+      toast.success("Account created successfully! Please sign in.");
+      navigate("/signin");
     } catch (error: any) {
-      const backendMessage = error.response?.data?.message;
+      const backendMessage = error.response?.data?.message || "Registration failed";
       setErrors({ backend: backendMessage });
+      toast.error(backendMessage);
     } finally {
       setIsLoading(false);
     }

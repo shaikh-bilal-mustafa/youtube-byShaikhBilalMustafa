@@ -7,13 +7,16 @@ import {
   getAllVideos,
   getMyVideos,
   getTrendingVideos,
+  getVideoById,
+  updateVideo,
+  getAllVideosPaginated,
 } from "../controllers/video.controller.js";
 import { upload } from "../middleware/multer.middleware.js";
 import { verifyJWT } from "../middleware/auth.middleware.js";
 const router = Router();
 router.route("/").get(getRandomVideos);
 router.route("/search").get(getVideoBySearch);
-router.route("/all").get(getAllVideos);
+router.route("/all").get(getAllVideosPaginated);
 router.route("/trending").get(getTrendingVideos);
 //secure routes with verifyJWT middleware
 router.route("/upload").post(
@@ -31,5 +34,6 @@ router.route("/upload").post(
   UploadVideo,
 );
 router.route("/my").get(verifyJWT, getMyVideos);
+router.route("/:videoId").get(getVideoById).put(verifyJWT, updateVideo);
 router.delete("/:videoId", verifyJWT, deleteVideo);
 export default router;

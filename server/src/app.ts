@@ -10,10 +10,10 @@ app.use(cors({
     credentials: true,
 }));
 app.use(express.json({
-    limit: "16kb",
+    limit: "500mb",
 }   
 ));
-app.use(urlencoded({ extended: true , limit :'16kb'}));
+app.use(urlencoded({ extended: true , limit : "500mb"}));
 app.use(express.static("public"));
 app.use(cookieParser());
 // Removed problematic CORS override middleware
@@ -33,12 +33,13 @@ import commentRouter from "./routes/comment.route.js";
 app.use("/api/v1", commentRouter);
 
 import likeRouter from "./routes/like.route.js";
-app.use("/api/v1/likes", likeRouter);
+app.use("/api/v1/like", likeRouter);
 
 import subscriptionRouter from "./routes/subscription.route.js";
-app.use("/api/v1/subscriptions", subscriptionRouter);
+app.use("/api/v1/subscription", subscriptionRouter);
 // Global error handler
 app.use((err: any, req: Request, res: Response, next: any) => {
+  console.error("🔥 GLOBAL ERROR:", err);
   if (err instanceof ApiError) {
     return res
       .status(err.code)

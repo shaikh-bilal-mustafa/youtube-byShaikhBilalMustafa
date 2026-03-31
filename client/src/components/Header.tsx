@@ -4,6 +4,7 @@ import { Input } from "./ui/input";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getProfile } from "../api/user.api";
+import { useAuth } from "../Context/AuthContext";
 interface HeaderProps {
   onMenuClick: () => void;
   onSearchChange: (value: string) => void;
@@ -14,6 +15,7 @@ export function Header({ onMenuClick, onSearchChange }: HeaderProps) {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState<{ avatar?: string } | null>(null);
   const navigate = useNavigate();
+  const { logout } = useAuth();
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
@@ -136,6 +138,15 @@ export function Header({ onMenuClick, onSearchChange }: HeaderProps) {
                   className="h-8 w-8 rounded-full object-cover border border-gray-200"
                 />
                 
+              </Button>
+
+              {/* Logout Button */}
+              <Button
+                variant="ghost"
+                onClick={logout}
+                className="px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-100"
+              >
+                Logout
               </Button>
             </div>
           ) : (
