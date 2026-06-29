@@ -43,10 +43,11 @@ const calculatePasswordStrength = (
 };
 
 interface SignUpProps {
-  onSwitchToSignIn: () => void;
+  onSwitchToSignIn?: () => void;
+  onSignUp?: () => void;
 }
 
-export default function SignUp({ onSwitchToSignIn }: SignUpProps) {
+export default function SignUp({ onSwitchToSignIn, onSignUp }: SignUpProps) {
   const { register } = useAuth();
   const navigate = useNavigate();
   // Form state
@@ -119,7 +120,11 @@ export default function SignUp({ onSwitchToSignIn }: SignUpProps) {
     try {
       await register(fullName, email, password);
       toast.success("Account created successfully! Please sign in.");
-      navigate("/signin");
+      if (onSignUp) {
+        await onSignUp();
+      } else {
+        navigate("/signin");
+      }
     } catch (error: any) {
       const backendMessage = error.response?.data?.message || "Registration failed";
       setErrors({ backend: backendMessage });

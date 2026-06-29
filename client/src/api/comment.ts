@@ -1,19 +1,21 @@
 import api from "./axios";
 
-export const fetchComments = async (videoId: string) => {
+export const fetchComments = async (videoId: string, page = 1, limit = 10) => {
   try {
-    const res = await api.get(`/comments/${videoId}`);
+    const res = await api.get(`/comments/${videoId}`, {
+      params: { page, limit },
+    });
     return res.data.data;
   } catch (error) {
     console.error("Failed to fetch comments", error);
-    return [];
+    return { comments: [], currentPage: page, totalPages: 1, totalComments: 0 };
   }
 };
 
 export const addComment = async (videoId: string, content: string) => {
   if (!content.trim()) return null;
 
-  const res = await api.post("/comments", { videoId, content });
+  const res = await api.post(`/comments/${videoId}`, { content });
   return res.data.data;
 };
 

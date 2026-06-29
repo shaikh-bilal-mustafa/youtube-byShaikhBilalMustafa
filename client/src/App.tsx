@@ -1,7 +1,14 @@
+import React from "react";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
+
+declare global {
+  interface Window {
+    __analyticsInitialized?: boolean;
+  }
+}
 import UploadPage from "./pages/UploadVideo";
 import Pay  from "./pages/hadiya"
 import { Routes, Route, useNavigate } from "react-router-dom";
@@ -10,6 +17,14 @@ import ProfilePage from "./pages/Profile";
 
 function App() {
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    // Placeholder for analytics initialization (Google Analytics, Plausible, etc.)
+    if (window && !window.__analyticsInitialized) {
+      console.log("Analytics placeholder: initialize here");
+      window.__analyticsInitialized = true;
+    }
+  }, []);
 
   return (
     <>

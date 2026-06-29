@@ -20,7 +20,7 @@ const registerUser = asyncHandler(async (req: Request, res: Response) => {
   if(!username){
     username = generateRandomUsername(); 
   }
-  console.log(username);
+  // username generation handled internally; avoid logging sensitive data
   if (!username || !email || !password || !fullName) {
     if (req.file?.path) {
           fs.unlink(req.file.path, (err) => {
@@ -104,7 +104,6 @@ const generateAccessAndRefreshTokens = async (userId: string) => {
   }
 };
 const loginUser = asyncHandler(async (req: any, res: any) => {
-  console.log("Request body:", req.body); // Debug log
   if (!req.body) {
     throw new ApiError(400, "Request body is required");
   }
@@ -128,14 +127,17 @@ const loginUser = asyncHandler(async (req: any, res: any) => {
   const loggedInUser = await User.findById(user._id).select(
     "-password -refreshToken",
   );
-  const options = {
+  const isProd = process.env.NODE_ENV === "production";
+  const cookieOptions = {
     httpOnly: true,
-    secure: true,
-  };
+    secure: isProd, // secure cookies only in production (requires HTTPS)
+    sameSite: isProd ? "none" : "lax",
+  } as const;
+
   return res
     .status(200)
-    .cookie("accessToken", accessToken, options)
-    .cookie("refreshToken", refreshToken, options)
+    .cookie("accessToken", accessToken, cookieOptions)
+    .cookie("refreshToken", refreshToken, cookieOptions)
     .json(
       new ApiResponse(
         200,
@@ -153,14 +155,18 @@ const logoutUser = asyncHandler(async (req: any, res: any) => {
     },
     { new: true },
   );
-  const options = {
+  const isProd = process.env.NODE_ENV === "production";
+  const cookieOptions = {
     httpOnly: true,
-    secure: true,
-  };
+    secure: isProd,
+    sameSite: isProd ? "none" : "lax",
+  } as const;
+
+  // Clear cookies on logout
   return res
     .status(200)
-    .cookie("accessToken", options)
-    .cookie("refreshToken", options)
+    .clearCookie("accessToken", cookieOptions)
+    .clearCookie("refreshToken", cookieOptions)
     .json(new ApiResponse(200, {}, "User logged out successfully"));
 });
 const refreshAccessToken = asyncHandler(async (req: any, res: any) => {
@@ -179,17 +185,19 @@ const refreshAccessToken = asyncHandler(async (req: any, res: any) => {
     if (incomingRefreshToken !== user?.refreshToken) {
       throw new ApiError(401, "Refresh token is expired or used");
     }
-    const options = {
+    const isProd = process.env.NODE_ENV === "production";
+    const cookieOptions = {
       httpOnly: true,
-      secure: true,
-    };
+      secure: isProd,
+      sameSite: isProd ? "none" : "lax",
+    } as const;
     const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
       user._id,
     );
     return res
       .status(200)
-      .cookie("accessToken", accessToken, options)
-      .cookie("refreshToken", refreshToken, options)
+      .cookie("accessToken", accessToken, cookieOptions)
+      .cookie("refreshToken", refreshToken, cookieOptions)
       .json(
         new ApiResponse(
           200,

@@ -48,7 +48,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const response = await getProfile();
       setUser(response.data.data);
     } catch (error) {
-      console.error('Auth check failed:', error);
+      console.warn('Auth check failed');
       localStorage.removeItem('accessToken');
       setUser(null);
     } finally {
@@ -69,7 +69,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const register = async (fullName: string, email: string, password: string) => {
     try {
-      const response = await registerUser({ fullName, email, password });
+      await registerUser({ fullName, email, password });
       // After registration, user needs to login
       // You might want to auto-login or redirect to login
     } catch (error) {
@@ -81,7 +81,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       await logoutUser();
     } catch (error) {
-      console.error('Logout error:', error);
+      console.warn('Logout error');
     } finally {
       localStorage.removeItem('accessToken');
       setUser(null);

@@ -16,10 +16,11 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 interface SignInProps {
-  onSwitchToSignUp: () => void;
+  onSwitchToSignUp?: () => void;
+  onSignIn?: () => void;
 }
 
-export default function SignIn({ onSwitchToSignUp }: SignInProps) {
+export default function SignIn({ onSwitchToSignUp, onSignIn }: SignInProps) {
   const { login } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -59,7 +60,11 @@ export default function SignIn({ onSwitchToSignUp }: SignInProps) {
     try {
       await login(email, password);
       toast.success("Logged in successfully!");
-      navigate("/");
+      if (onSignIn) {
+        onSignIn();
+      } else {
+        navigate("/");
+      }
     } catch (error: any) {
       const backendMessage = error.response?.data?.message || "Login failed";
       setErrors({ backend: backendMessage });
@@ -173,7 +178,7 @@ export default function SignIn({ onSwitchToSignUp }: SignInProps) {
                 </p>
               )}
       </div>
-            <Button type="submit" className="w-full" size="lg">
+            <Button  type="submit" className="w-full" size="lg">
               Sign in
             </Button>
 
@@ -182,7 +187,7 @@ export default function SignIn({ onSwitchToSignUp }: SignInProps) {
               <button
                 type="button"
                 className="text-primary hover:underline"
-                onClick={onSwitchToSignUp}
+                onClick={onSwitchToSignUp ? onSwitchToSignUp : () => navigate("/signup")}
               >
                 Sign up
               </button>

@@ -52,6 +52,13 @@ export function VideoPlayer({ video }: VideoPlayerProps) {
   const [comments, setComments] = useState<CommentItem[]>([]);
   const [newComment, setNewComment] = useState("");
   const [likeCount, setLikeCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalComments, setTotalComments] = useState(0);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [video._id]);
 
   useEffect(() => {
     const ownerId = video.owner?._id || "";
@@ -68,10 +75,12 @@ export function VideoPlayer({ video }: VideoPlayerProps) {
       }
     };
 
-    const loadComments = async () => {
+    const loadComments = async (page: number) => {
       try {
-        const fetchedComments = await fetchComments(video._id);
-        setComments(fetchedComments || []);
+        const result = await fetchComments(video._id, page, 6);
+        setComments(result.comments || []);
+        setTotalPages(result.totalPages || 1);
+        setTotalComments(result.totalComments || 0);
       } catch (error) {
         console.error("Error loading comments:", error);
       }
@@ -89,9 +98,9 @@ export function VideoPlayer({ video }: VideoPlayerProps) {
     };
 
     loadSubscriptionData();
-    loadComments();
+    loadComments(currentPage);
     loadLikeData();
-  }, [video._id, video.owner, video.user]);
+  }, [video._id, video.owner, video.user, currentPage]);
 
   const handleSubscribe = async () => {
     const ownerId = video.owner?._id || "";
@@ -111,8 +120,13 @@ export function VideoPlayer({ video }: VideoPlayerProps) {
     try {
       const addedComment = await addComment(video._id, newComment);
       if (addedComment) {
-        setComments(prev => [addedComment, ...prev]);
         setNewComment("");
+        setTotalComments((prev) => prev + 1);
+        if (currentPage === 1) {
+          setComments((prev) => [addedComment, ...prev]);
+        } else {
+          setCurrentPage(1);
+        }
       }
     } catch (error) {
       console.error("Error adding comment:", error);
@@ -275,7 +289,7 @@ export function VideoPlayer({ video }: VideoPlayerProps) {
 
           {/* Comments section */}
           <div className="mt-6">
-            <h2 className="text-lg font-semibold mb-4">{comments.length} Comments</h2>
+            <h2 className="text-lg font-semibold mb-4">{totalComments} Comments</h2>
             
             {/* Add comment */}
             <div className="flex gap-3 mb-6">
@@ -355,6 +369,28 @@ export function VideoPlayer({ video }: VideoPlayerProps) {
                 </div>
               ))}
             </div>
+
+            {totalPages > 1 && (
+              <div className="flex items-center justify-between mt-6 gap-3">
+                <Button
+                  variant="outline"
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                >
+                  Previous
+                </Button>
+                <span className="text-sm text-gray-600">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <Button
+                  variant="outline"
+                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                >
+                  Next
+                </Button>
+              </div>
+            )}
           </div>
         </div>
 

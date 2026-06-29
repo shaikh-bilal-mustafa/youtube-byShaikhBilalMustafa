@@ -2,13 +2,22 @@ import { Router, urlencoded } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import express, { Request, Response } from "express";
-// const router = Router();
+import env from "./config/env.js";
 const app = express();
-app.use(cors({
-    origin: ["http://localhost:5173", "http://localhost:8000"],
-    methods: ["GET", "POST", "PUT", "DELETE"],
+// If CLIENT_URL is set to '*' we allow all origins by reflecting the request origin.
+// This keeps `credentials: true` working because the cors middleware will echo
+// back the incoming `Origin` header instead of sending a literal '*'.
+const corsOrigin = env.CLIENT_URL === "*"
+  ? true
+  : (env.CLIENT_URL ? [env.CLIENT_URL] : ["http://localhost:5173"]);
+
+app.use(
+  cors({
+    origin: corsOrigin,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
-}));
+  }),
+);
 app.use(express.json({
     limit: "500mb",
 }   
@@ -39,7 +48,7 @@ import subscriptionRouter from "./routes/subscription.route.js";
 app.use("/api/v1/subscription", subscriptionRouter);
 // Global error handler
 app.use((err: any, req: Request, res: Response, next: any) => {
-  console.error("🔥 GLOBAL ERROR:", err);
+  console.error("GLOBAL ERROR:", err);
   if (err instanceof ApiError) {
     return res
       .status(err.code)

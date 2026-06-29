@@ -16,7 +16,7 @@ export default function SubscriptionsPage() {
       setLoading(true);
       try {
         const res = await getSubscriptionVideos();
-        setVideos(res.data.videos || []);
+        setVideos(res.videos || []);
       } catch (e) {
         console.error("Error loading videos:", e);
         setError("Failed to load videos");

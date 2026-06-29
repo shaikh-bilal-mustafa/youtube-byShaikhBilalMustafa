@@ -8,16 +8,17 @@ const addComment = asyncHandler(async (req: Request, res: Response) => {
     if(!req.user || !req.user._id) {
         throw new ApiError(401, 'Login required');
     }
-    const { videoId, content } = req.body;
-    
+    const { videoId } = req.params;
+    const { content } = req.body;
+
     if (!videoId || !content) {
         throw new ApiError(400, 'Video ID and content are required');
-    }   
+    }
     const comment = await Comment.create({
         content,
         video: videoId,
         owner: req.user._id,
-    }); 
+    });
     res.json(new ApiResponse(201, comment, 'Comment added successfully'));
 });
 
@@ -27,7 +28,7 @@ const getVideoComments = asyncHandler(async (req: Request, res: Response) => {
         throw new ApiError(400, 'Video ID is required');
     }
     const comments = await Comment.find({ video: videoId })
-        .populate('owner', 'username avatarUrl')
+        .populate('owner', 'username avatar')
         .sort({ createdAt: -1 });
     res.json(new ApiResponse(200, comments, 'Comments fetched successfully'));
 });
@@ -84,7 +85,7 @@ const getVideoCommentsPaginated = asyncHandler(async (req: Request, res: Respons
         .limit(limit);
     const totalComments = await Comment.countDocuments({ video: videoId });
     const totalPages = Math.ceil(totalComments / limit);
-    res.json(new ApiResponse(200, { comments, totalPages, currentPage: page }, 'Comments fetched successfully'));
+    res.json(new ApiResponse(200, { comments, totalComments, totalPages, currentPage: page }, 'Comments fetched successfully'));
 });
 
 

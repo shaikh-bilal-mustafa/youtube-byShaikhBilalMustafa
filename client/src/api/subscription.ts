@@ -17,5 +17,5 @@ export const getSubscriptionStatus = async (channelId: string) => {
 
 export const getSubscriptionVideos = async () => {
   const res = await api.get("/subscription/videos");
-  return res.data;
+  return res.data.data;
 };

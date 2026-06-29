@@ -5,7 +5,7 @@ dotenv.config();
 const env = {
   PORT: Number(process.env.PORT) || 8000,
   MONGODB_URL: process.env.MONGODB_URL as string,
-  CLINET_URL: process.env.CLIENT_URL as string,
+  CLIENT_URL: process.env.CLIENT_URL as string,
   ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET as string,
   ACCESS_TOKEN_EXPIRY:process.env.ACCESS_TOKEN_EXPIRY as SignOptions["expiresIn"],
   REFRESH_TOKEN_SECRET:process.env.REFRESH_TOKEN_SECRET as string,
@@ -16,8 +16,8 @@ const env = {
 };
 
 // safety check
-if (!env.MONGODB_URL) {
-  throw new Error("❌ Missing required environment variables");
+if (!env.MONGODB_URL || !env.CLIENT_URL) {
+  throw new Error("❌ Missing required environment variables (MONGODB_URL or CLIENT_URL)");
 }
 if (!process.env.REFRESH_TOKEN_SECRET) {
   throw new Error("REFRESH_TOKEN_SECRET is missing");

@@ -1,4 +1,5 @@
 import { Subscription } from "../models/subscription.model.js";
+import { Video } from "../models/video.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Request, Response } from "express";
 import { ApiError } from "../utils/ApiError.js";
@@ -47,4 +48,26 @@ const getSubscriptionStatus = asyncHandler(async (req: Request, res: Response) =
     });
     res.json(new ApiResponse(200, { isSubscribed: !!subscription }, "Subscription status fetched"));
 });
-export { toggleSubscription, getSubscriptionCount, getSubscriptionStatus };
+
+const getSubscriptionVideos = asyncHandler(async (req: Request, res: Response) => {
+    const userId = req.user._id;
+    if (!userId) {
+        throw new ApiError(401, "Login required");
+    }
+    const subscriptions = await Subscription.find({ subscriber: userId });
+    const channelIds = subscriptions.map((sub) => sub.channel);
+    if (channelIds.length === 0) {
+        return res.json(new ApiResponse(200, { videos: [] }, "Subscription videos fetched"));
+    }
+
+    const videos = await Video.find({
+        user: { $in: channelIds },
+        visibility: "public",
+    })
+        .sort({ createdAt: -1 })
+        .populate("user", "username avatar");
+
+    res.json(new ApiResponse(200, { videos }, "Subscription videos fetched"));
+});
+
+export { toggleSubscription, getSubscriptionCount, getSubscriptionStatus, getSubscriptionVideos };
